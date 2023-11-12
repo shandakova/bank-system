@@ -1,5 +1,7 @@
 package com.shand.banksystem.services.impl;
 
+import com.shand.banksystem.dto.CurrencyRateDto;
+import com.shand.banksystem.dto.base.BaseResponse;
 import com.shand.banksystem.model.CurrencyRate;
 import com.shand.banksystem.repositories.CurrencyRateRepository;
 import com.shand.banksystem.services.RussiaBankService;
@@ -42,12 +44,20 @@ public class RussiaBankServiceImpl implements RussiaBankService {
         rateRepository.saveAll(allRates);
     }
 
-    public Map<String, BigDecimal> getCurrencyMapByNames(List<String> names) {
-        List<CurrencyRate> rates = rateRepository.findAllByNameIn(names);
-        HashMap<String, BigDecimal> currencyRateMapFromBank = new HashMap<>();
-        rates.forEach(currencyRate -> currencyRateMapFromBank.put(currencyRate.getName(), currencyRate.getRate()));
-        return currencyRateMapFromBank;
+    @Override
+    public BaseResponse<List<CurrencyRateDto>> getCurrencyRateList() {
+        List<CurrencyRate> rates = rateRepository.findAll();
+        var res = rates.stream().map(currencyRate ->
+                new CurrencyRateDto(currencyRate.getName(), currencyRate.getRate())).toList();
+        return BaseResponse.<List<CurrencyRateDto>>builder().success(true)
+                .value(res).build();
     }
+
+//    private HashMap<String, BigDecimal> buildMapFromCurrencyRateList(List<CurrencyRate> rates) {
+//        HashMap<String, BigDecimal> currencyRateMapFromBank = new HashMap<>();
+//        rates.forEach(currencyRate -> currencyRateMapFromBank.put(currencyRate.getName(), currencyRate.getRate()));
+//        return currencyRateMapFromBank;
+//    }
 
     private void updateRatesList(HashMap<String, BigDecimal> currencyRateMapFromBank, List<CurrencyRate> allRates) {
         ratesName.forEach(s -> {

@@ -1,6 +1,10 @@
 package com.shand.banksystem.services.impl;
 
+import com.shand.banksystem.dto.CurrencyRateDto;
+import com.shand.banksystem.dto.base.BaseResponse;
+import com.shand.banksystem.repositories.CurrencyRateRepository;
 import com.shand.banksystem.services.RussiaBankService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,22 +20,24 @@ class RussiaBankServiceImplTest {
     @Autowired
     RussiaBankService service;
 
+    @Autowired
+    CurrencyRateRepository rateRepository;
+
+    @BeforeEach
+    void clearBase() {
+        rateRepository.deleteAll();
+    }
+
     @Test
-    void updateLocalCurrency_containTwoCurrencyInBase() {
-        List<String> names = List.of("USD", "EUR");
-        Map<String, BigDecimal> currencyMapByNames = service.getCurrencyMapByNames(names);
-        assertEquals(0, currencyMapByNames.size());
+    void getCurrencyRateList_containTwoCurrencyInBase() {
+        BaseResponse<List<CurrencyRateDto>> currencyRateList = service.getCurrencyRateList();
+        assertTrue(currencyRateList.isSuccess());
+        assertNotNull(currencyRateList.getValue());
+        assertEquals(0, currencyRateList.getValue().size());
 
         service.updateLocalCurrency();
-        currencyMapByNames = service.getCurrencyMapByNames(names);
-        assertEquals(2, currencyMapByNames.size());
-        for (String currency : names) {
-            assertTrue(currencyMapByNames.containsKey(currency));
-            assertNotNull(currencyMapByNames.get(currency));
-        }
-
-        service.updateLocalCurrency();
-        currencyMapByNames = service.getCurrencyMapByNames(names);
-        assertEquals(2, currencyMapByNames.size());
+        currencyRateList = service.getCurrencyRateList();
+        assertNotNull(currencyRateList.getValue());
+        assertEquals(2, currencyRateList.getValue().size());
     }
 }

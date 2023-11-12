@@ -7,11 +7,11 @@ import java.math.BigDecimal;
 
 @Entity
 @Data
-@Table(name = "currency_table")
+@Table(name = "currency_rates")
 public class CurrencyRate {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "currency_table_seq")
-    @SequenceGenerator(name = "currency_table_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "currency_rates_seq")
+    @SequenceGenerator(name = "currency_rates_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(name = "name", nullable = false, unique = true)

@@ -5,19 +5,19 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
     <changeSet id="1699563876622-1" author="galina">
-        <createSequence incrementBy="1" sequenceName="currency_table_seq" startValue="1"/>
-        <createTable tableName="currency_table">
+        <createSequence incrementBy="1" sequenceName="currency_rates_seq" startValue="1"/>
+        <createTable tableName="currency_rates">
             <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_currency_table"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_currency_rates"/>
             </column>
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="rate" type="DOUBLE">
+            <column name="rate" type="NUMERIC(20,5)">
                 <constraints nullable="false" unique="true"/>
             </column>
         </createTable>
-        <createIndex tableName="currency_table" indexName="currency_table_name_idx">
+        <createIndex tableName="currency_rates" indexName="currency_rates_name_idx">
             <column name="name"/>
         </createIndex>
     </changeSet>
