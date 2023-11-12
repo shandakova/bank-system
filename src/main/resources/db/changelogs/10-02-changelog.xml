@@ -25,9 +25,10 @@
             <column name="account_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="type" type="VARCHAR(255)">
+            <column name="type" type="TEXT">
                 <constraints nullable="false"/>
             </column>
+            <column name="description" type="TEXT"/>
             <column name="amount" type="NUMERIC(20,2)">
                 <constraints nullable="false"/>
             </column>

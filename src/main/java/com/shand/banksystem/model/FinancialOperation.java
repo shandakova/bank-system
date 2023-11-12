@@ -29,6 +29,9 @@ public class FinancialOperation {
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "date", nullable = false)
     private LocalDateTime dateTime;
 }

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CurrencyRateRepository extends JpaRepository<CurrencyRate, Long> {
     List<CurrencyRate> findAllByNameIn(List<String> names);
+
+    CurrencyRate findFirstByName(String name);
 }

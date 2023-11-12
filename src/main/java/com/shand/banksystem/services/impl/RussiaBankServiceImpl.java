@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -33,6 +32,11 @@ public class RussiaBankServiceImpl implements RussiaBankService {
     public RussiaBankServiceImpl(DailyInfoBankClient dailyInfoBankClient, CurrencyRateRepository rateRepository) {
         this.dailyInfoBankClient = dailyInfoBankClient;
         this.rateRepository = rateRepository;
+    }
+
+    @Override
+    public CurrencyRate findRateByName(String currency) {
+        return rateRepository.findFirstByName(currency);
     }
 
     @Transactional
@@ -52,12 +56,6 @@ public class RussiaBankServiceImpl implements RussiaBankService {
         return BaseResponse.<List<CurrencyRateDto>>builder().success(true)
                 .value(res).build();
     }
-
-//    private HashMap<String, BigDecimal> buildMapFromCurrencyRateList(List<CurrencyRate> rates) {
-//        HashMap<String, BigDecimal> currencyRateMapFromBank = new HashMap<>();
-//        rates.forEach(currencyRate -> currencyRateMapFromBank.put(currencyRate.getName(), currencyRate.getRate()));
-//        return currencyRateMapFromBank;
-//    }
 
     private void updateRatesList(HashMap<String, BigDecimal> currencyRateMapFromBank, List<CurrencyRate> allRates) {
         ratesName.forEach(s -> {
