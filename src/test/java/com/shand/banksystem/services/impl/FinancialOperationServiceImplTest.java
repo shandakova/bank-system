@@ -71,9 +71,16 @@ class FinancialOperationServiceImplTest {
         filter.setEnd(LocalDateTime.now().plusDays(1));
         BasePageResponse<List<FinancialOperationFullDto>> listOperation = financialOperationService.getListOperation(BasePageRequest.<OperationFilter>builder().
                 page(0).size(10).filter(filter).build());
-
+        int listSize = listOperation.getValue().size();
         assertTrue(listOperation.isSuccess());
         assertTrue(listOperation.getValue().contains(response.getValue()));
+
+        filter.setCurrency("USD");
+        listOperation = financialOperationService.getListOperation(BasePageRequest.<OperationFilter>builder().
+                page(0).size(10).filter(filter).build());
+
+        assertTrue(listOperation.isSuccess());
+        assertEquals(listSize, listOperation.getValue().size());
     }
 
     @Test

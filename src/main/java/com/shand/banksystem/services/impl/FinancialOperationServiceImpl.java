@@ -43,7 +43,7 @@ public class FinancialOperationServiceImpl implements FinancialOperationService 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public BaseResponse<FinancialOperationFullDto> makeOperation(FinancialOperationBaseDto dto) {
-        BaseResponse<FinancialOperationFullDto> result = validateOperationDto(dto);
+        var result = validateOperationDto(dto);
         if (result != null) {
             return result;
         }
