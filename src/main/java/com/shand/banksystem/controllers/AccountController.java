@@ -36,5 +36,4 @@ public class AccountController {
         return accountService.getAccountsPage(request);
     }
 
-
 }

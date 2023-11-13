@@ -68,7 +68,7 @@ public class FinancialOperationServiceImpl implements FinancialOperationService 
             return result;
         }
         CurrencyRate rate = bankService.findRateByName(request.getFilter().getCurrency());
-        if (rate == null && !request.getFilter().getCurrency().equals("RUB")) {
+        if (rate == null && request.getFilter().getCurrency() != null && !request.getFilter().getCurrency().equals("RUB")) {
             return BasePageResponse.<List<FinancialOperationFullDto>>builder()
                     .success(false).message("Not found currency. Update currency or request in 'RUB'").build();
         }

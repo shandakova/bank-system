@@ -2,6 +2,7 @@ package com.shand.banksystem.services.impl;
 
 import com.shand.banksystem.dto.CurrencyRateDto;
 import com.shand.banksystem.dto.base.BaseResponse;
+import com.shand.banksystem.model.CurrencyRate;
 import com.shand.banksystem.repositories.CurrencyRateRepository;
 import com.shand.banksystem.services.RussiaBankService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,9 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,5 +38,12 @@ class RussiaBankServiceImplTest {
         currencyRateList = service.getCurrencyRateList();
         assertNotNull(currencyRateList.getValue());
         assertEquals(2, currencyRateList.getValue().size());
+    }
+
+    @Test
+    void findCurrencyRate_UsdInBase() {
+        service.updateLocalCurrency();
+        CurrencyRate usd = service.findRateByName("USD");
+        assertNotNull(usd);
     }
 }

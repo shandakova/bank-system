@@ -64,6 +64,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
+    @Override
     public BasePageResponse<List<AccountDto>> getAccountsPage(BasePageRequest<Void> request) {
         String message = ValidationUtils.validatePageRequest(request);
         if (message != null) {
@@ -73,7 +74,7 @@ public class AccountServiceImpl implements AccountService {
         Page<Account> all = repository.findAll(PageRequest.of(request.getPage(), request.getSize()));
         List<AccountDto> accountDtos = all.getContent().stream().map(account ->
                 new AccountDto(account.getId().toString(),
-                        account.getBalance().setScale(2))).toList();
+                        account.getBalance().setScale(2, RoundingMode.HALF_DOWN))).toList();
         return BasePageResponse.<List<AccountDto>>builder()
                 .success(true)
                 .value(accountDtos)

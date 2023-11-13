@@ -18,7 +18,7 @@ public class FinancialOperationUtils {
         FinancialOperationFullDto dto = new FinancialOperationFullDto();
         dto.setId(operation.getId());
         dto.setAccount(operation.getAccount().getId().toString());
-        dto.setAmount(operation.getAmount());
+        dto.setAmount(operation.getAmount().setScale(2, RoundingMode.HALF_DOWN));
         dto.setDescription(operation.getDescription());
         dto.setDateTime(operation.getDateTime());
         dto.setType(operation.getType());

@@ -63,7 +63,7 @@ class AccountServiceImplTest {
         BaseResponse<AccountDto> newAccount = accountService.createNewAccount();
         BaseResponse<AccountDto> response = accountService.changeAccountBalance(newAccount.getValue().getUuid(), BigDecimal.valueOf(10));
         assertTrue(response.isSuccess());
-        assertTrue(0 == BigDecimal.valueOf(10).compareTo(response.getValue().getBalance()));
+        assertEquals(0, BigDecimal.valueOf(10).compareTo(response.getValue().getBalance()));
     }
 
 }
