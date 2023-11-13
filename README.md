@@ -11,7 +11,7 @@
 Выполнить POST http://localhost:8080/accounts/new
 Получить в ответ (здесь нам понадобится uuid):
 
-`
+```
 {
  "value": {
    "uuid": "96761cfa-ef84-48a2-ae2e-e557217485ae",
@@ -20,26 +20,26 @@
  "success": true,
  "message": null
 }
-`
+```
 
 2. Загрузить в базу список курсов валют
 
 Выполнить POST http://localhost:8080/currency/upload
 
 Получить ответ:
-`
+```
 {
   "value": null,
   "success": true,
   "message": null
 }
-`
+```
 3. Можно проверить загруженное содержимое
 
 Выполнить GET http://localhost:8080/currency
 
 Получить ответ:
-`
+```
 {
   "value": [
     {
@@ -54,7 +54,7 @@
   "success": true,
   "message": null
 }
-`
+```
 
 4. Далее выполнить, например, операцию пополнения аккаунта
 
@@ -62,20 +62,20 @@
 
 В аккаунт подставляем полученный ранее uuid.
 
-`
+```
 {
   "account": "96761cfa-ef84-48a2-ae2e-e557217485ae",
   "type": "DEPOSIT",
   "description": "Тестовое пополнение",
   "amount": 1000
 }
-`
+```
 
 5. Получить список операций в валюте за этот год
 
 Выполнить POST http://localhost:8080/operation/search
 
-`
+```
 {
   "filter": {
     "currency": "USD",
@@ -85,11 +85,11 @@
   "page": 0,
   "size": 10
 }
-`
+```
 
 Получить ответ:
 
-`
+```
 {
   "value": [
     {
@@ -108,4 +108,4 @@
   "totalPage": 1,
   "size": 0
 }
-`
+```
