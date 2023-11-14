@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -14,7 +15,7 @@ public class FinancialOperationFullDto extends FinancialOperationBaseDto {
     private Long id;
 
     @Schema(description = "Время исполнения")
-    private LocalDateTime dateTime;
+    private ZonedDateTime dateTime;
 
     @Schema(description = "Валюта")
     private String currency;

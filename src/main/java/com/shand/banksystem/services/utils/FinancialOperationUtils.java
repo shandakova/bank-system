@@ -3,11 +3,11 @@ package com.shand.banksystem.services.utils;
 import com.shand.banksystem.dto.FinancialOperationBaseDto;
 import com.shand.banksystem.dto.FinancialOperationFullDto;
 import com.shand.banksystem.model.Account;
-import com.shand.banksystem.model.CurrencyRate;
 import com.shand.banksystem.model.FinancialOperation;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 public class FinancialOperationUtils {
@@ -26,10 +26,10 @@ public class FinancialOperationUtils {
         return dto;
     }
 
-    public static FinancialOperationFullDto mapFullDtoFromOperationWithRate(FinancialOperation operation, CurrencyRate rate) {
+    public static FinancialOperationFullDto mapFullDtoFromOperationWithRate(FinancialOperation operation, String currency, BigDecimal rate) {
         FinancialOperationFullDto dto = mapFullDtoFromOperation(operation);
-        dto.setAmount(dto.getAmount().divide(rate.getRate(), 2, RoundingMode.HALF_DOWN));
-        dto.setCurrency(rate.getName());
+        dto.setAmount(dto.getAmount().divide(rate, 2, RoundingMode.HALF_DOWN));
+        dto.setCurrency(currency);
         return dto;
     }
 
@@ -40,7 +40,7 @@ public class FinancialOperationUtils {
         operation.setAccount(account);
         operation.setAmount(dto.getAmount());
         operation.setDescription(dto.getDescription());
-        operation.setDateTime(LocalDateTime.now());
+        operation.setDateTime(ZonedDateTime.now());
         operation.setType(dto.getType());
         return operation;
     }

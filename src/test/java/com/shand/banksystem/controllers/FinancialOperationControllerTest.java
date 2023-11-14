@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -46,10 +46,11 @@ class FinancialOperationControllerTest {
         assertNotNull(operationResp.getValue());
 
         OperationFilter filter = new OperationFilter();
-        filter.setStart(LocalDateTime.now().minusDays(1));
-        filter.setEnd(LocalDateTime.now().plusDays(1));
+        filter.setCurrency("RUB");
+        filter.setStart(ZonedDateTime.now().minusDays(1));
+        filter.setEnd(ZonedDateTime.now().plusDays(1));
         BasePageResponse<List<FinancialOperationFullDto>> listOperation = finController.getList(BasePageRequest.<OperationFilter>builder().
                 page(0).size(10).filter(filter).build());
-        assertTrue(listOperation.getValue().contains(operationResp.getValue()));
+        assertTrue(listOperation.getValue().stream().anyMatch(d -> d.getId().equals(operationResp.getValue().getId())));
     }
 }

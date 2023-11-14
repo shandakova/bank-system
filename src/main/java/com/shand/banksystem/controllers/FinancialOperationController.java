@@ -34,7 +34,7 @@ public class FinancialOperationController {
     }
 
     @PostMapping("/search")
-    @Operation(summary = "Страницчный поиск по фильтру")
+    @Operation(summary = "Страничный поиск по фильтру")
     public BasePageResponse<List<FinancialOperationFullDto>> getList(@RequestBody(required = true) BasePageRequest<OperationFilter> request) {
         return service.getListOperation(request);
     }

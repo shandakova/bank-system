@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 
 @Data
@@ -33,5 +33,5 @@ public class FinancialOperation {
     private String description;
 
     @Column(name = "date", nullable = false)
-    private LocalDateTime dateTime;
+    private ZonedDateTime dateTime;
 }

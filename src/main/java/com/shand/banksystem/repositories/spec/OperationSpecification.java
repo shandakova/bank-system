@@ -16,6 +16,7 @@ public class OperationSpecification {
         return (root, query, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             predicateList.add(cb.between(root.get("dateTime"), filter.getStart(), filter.getEnd()));
+            query.orderBy(cb.asc(root.get("dateTime")));
             return cb.and(predicateList.toArray(predicateList.toArray(new Predicate[0])));
         };
     }

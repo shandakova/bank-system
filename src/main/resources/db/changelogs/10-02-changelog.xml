@@ -32,7 +32,7 @@
             <column name="amount" type="NUMERIC(20,2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="date" type="TIMESTAMP(9)">
+            <column name="date" type="TIMESTAMP(9) WITH TIME ZONE">
                 <constraints nullable="false"/>
             </column>
         </createTable>

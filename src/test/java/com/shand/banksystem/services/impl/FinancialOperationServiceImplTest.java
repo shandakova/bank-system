@@ -7,7 +7,10 @@ import com.shand.banksystem.dto.OperationFilter;
 import com.shand.banksystem.dto.base.BasePageRequest;
 import com.shand.banksystem.dto.base.BasePageResponse;
 import com.shand.banksystem.dto.base.BaseResponse;
+import com.shand.banksystem.model.Account;
+import com.shand.banksystem.model.FinancialOperation;
 import com.shand.banksystem.model.enums.FinancialOperationType;
+import com.shand.banksystem.repositories.FinancialOperationRepository;
 import com.shand.banksystem.services.AccountService;
 import com.shand.banksystem.services.FinancialOperationService;
 import org.junit.jupiter.api.Test;
@@ -15,9 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
+import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -27,6 +32,9 @@ class FinancialOperationServiceImplTest {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private FinancialOperationRepository repository;
 
     @Test
     void makeOperation_failed() {
@@ -67,13 +75,13 @@ class FinancialOperationServiceImplTest {
         assertNotNull(response.getValue());
 
         OperationFilter filter = new OperationFilter();
-        filter.setStart(LocalDateTime.now().minusDays(1));
-        filter.setEnd(LocalDateTime.now().plusDays(1));
+        filter.setStart(ZonedDateTime.now().minusDays(1));
+        filter.setEnd(ZonedDateTime.now().plusDays(1));
         BasePageResponse<List<FinancialOperationFullDto>> listOperation = financialOperationService.getListOperation(BasePageRequest.<OperationFilter>builder().
                 page(0).size(10).filter(filter).build());
         int listSize = listOperation.getValue().size();
         assertTrue(listOperation.isSuccess());
-        assertTrue(listOperation.getValue().contains(response.getValue()));
+        assertTrue(listOperation.getValue().stream().anyMatch(d -> d.getId().equals(response.getValue().getId())));
 
         filter.setCurrency("USD");
         listOperation = financialOperationService.getListOperation(BasePageRequest.<OperationFilter>builder().
@@ -90,14 +98,20 @@ class FinancialOperationServiceImplTest {
                 page(0).size(10).filter(filter).build());
         assertFalse(listOperation.isSuccess());
 
-        filter.setStart(LocalDateTime.now().minusDays(1));
-        filter.setEnd(LocalDateTime.now().plusDays(1));
+        listOperation = financialOperationService.getListOperation(null);
+        assertFalse(listOperation.isSuccess());
+
+        listOperation = financialOperationService.getListOperation(BasePageRequest.<OperationFilter>builder().page(0).size(10).build());
+        assertFalse(listOperation.isSuccess());
+
+        filter.setStart(ZonedDateTime.now().minusDays(1));
+        filter.setEnd(ZonedDateTime.now().plusDays(1));
         filter.setCurrency("Strange");
         listOperation = financialOperationService.getListOperation(BasePageRequest.<OperationFilter>builder().
                 page(0).size(10).filter(filter).build());
         assertFalse(listOperation.isSuccess());
 
-        filter.setStart(LocalDateTime.now().plusDays(2));
+        filter.setStart(ZonedDateTime.now().plusDays(2));
         filter.setCurrency("RUB");
         listOperation = financialOperationService.getListOperation(BasePageRequest.<OperationFilter>builder().
                 page(0).size(10).filter(filter).build());
@@ -105,4 +119,28 @@ class FinancialOperationServiceImplTest {
 
     }
 
+    @Test
+    void getListOperation_withDatesOnWeekends() {
+        BaseResponse<AccountDto> accResp = accountService.createNewAccount();
+        Account account = new Account();
+        account.setId(UUID.fromString(accResp.getValue().getUuid()));
+        ZonedDateTime firstTime = ZonedDateTime.now().with(firstDayOfYear()).plusDays(1);
+        for (int i = 0; i < 10; i++) {
+            FinancialOperation op = new FinancialOperation();
+            op.setType(FinancialOperationType.DEPOSIT);
+            op.setAmount(BigDecimal.valueOf(1000));
+            op.setAccount(account);
+            op.setDateTime(firstTime);
+            firstTime = firstTime.plusDays(2);
+            repository.save(op);
+        }
+        OperationFilter filter = new OperationFilter();
+        filter.setStart(firstTime.minusDays(20));
+        filter.setEnd(firstTime.plusDays(5));
+        filter.setCurrency("USD");
+        BasePageResponse<List<FinancialOperationFullDto>> listOperation = financialOperationService.getListOperation(BasePageRequest.<OperationFilter>builder().
+                page(0).size(10).filter(filter).build());
+        assertTrue(listOperation.isSuccess());
+        listOperation.getValue().forEach(d -> System.out.println(d.getDateTime() + " " + d.getAmount() + "\n"));
+    }
 }

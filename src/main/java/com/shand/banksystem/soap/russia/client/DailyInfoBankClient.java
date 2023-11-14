@@ -1,5 +1,7 @@
 package com.shand.banksystem.soap.russia.client;
 
+import com.shand.banksystem.soap.russia.client.gen.GetCursDynamic;
+import com.shand.banksystem.soap.russia.client.gen.GetCursDynamicResponse;
 import com.shand.banksystem.soap.russia.client.gen.GetCursOnDate;
 import com.shand.banksystem.soap.russia.client.gen.GetCursOnDateResponse;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
@@ -20,6 +22,16 @@ public class DailyInfoBankClient extends WebServiceGatewaySupport {
         return (GetCursOnDateResponse) getWebServiceTemplate()
                 .marshalSendAndReceive(URI_CBR, request,
                         new SoapActionCallback("http://web.cbr.ru/GetCursOnDate"));
+    }
+
+    public GetCursDynamicResponse getCursDynamic(ZonedDateTime start, ZonedDateTime end, String code) {
+        GetCursDynamic request = new GetCursDynamic();
+        request.setToDate(convertXmlCalendarFromZonedDateTime(end));
+        request.setFromDate(convertXmlCalendarFromZonedDateTime(start));
+        request.setValutaCode(code);
+        return (GetCursDynamicResponse) getWebServiceTemplate()
+                .marshalSendAndReceive(URI_CBR, request,
+                        new SoapActionCallback("http://web.cbr.ru/GetCursDynamic"));
     }
 
     private XMLGregorianCalendar convertXmlCalendarFromZonedDateTime(ZonedDateTime date) {
